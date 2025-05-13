@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>泛华数科 - 建筑装饰领域数字化创新解决方案</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+        
+        :root {
+            --primary-color: #3B82F6;
+            --secondary-color: #10B981;
+            --accent-color: #8B5CF6;
+            --background-color: #F9FAFB;
+            --text-color: #1F2937;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+        }
+        
+        .hero-shape {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 80%;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.05));
+            border-radius: 0 0 0 100%;
+            z-index: -1;
+        }
+        
+        .mega-menu {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateY(-10px);
+        }
+        
+        .menu-trigger:hover .mega-menu {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 滚动动效 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 移动端菜单 */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* Apple风格滚动动效 */
+        .parallax-item {
+            opacity: 0;
+            transform: translateY(100px) scale(0.95);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        .parallax-item.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Bento Grid 样式 */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .bento-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .bento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .bento-card.primary-card {
+            grid-column: span 8;
+            grid-row: span 2;
+        }
+        
+        .bento-card.secondary-card {
+            grid-column: span 4;
+            grid-row: span 1;
+        }
+        
+        @media (max-width: 768px) {
+            .bento-card.primary-card,
+            .bento-card.secondary-card {
+                grid-column: span 12;
+            }
+        }
+        
+        /* 数字强调 */
+        .number-emphasis {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1;
+            opacity: 0.1;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            z-index: 0;
+        }
+        
+        /* 微信二维码弹窗样式 */
+        .qrcode-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .qrcode-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .qrcode-container {
+            position: relative;
+            max-width: 90%;
+            width: 380px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .qrcode-modal.active .qrcode-container {
+            transform: scale(1) translateY(0);
+        }
+        
+        .qrcode-header {
+            padding: 1.5rem;
+            background: linear-gradient(to right, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.6));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qrcode-header::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+            opacity: 0.5;
+        }
+        
+        .qrcode-title {
+            position: relative;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 0;
+            z-index: 1;
+        }
+        
+        .qrcode-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .qrcode-close:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .qrcode-body {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .qrcode-image {
+            width: 220px;
+            height: 220px;
+            border-radius: 0.5rem;
+            background: white;
+            padding: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qrcode-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .qrcode-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+            animation: qrcode-shine 3s infinite;
+        }
+        
+        @keyframes qrcode-shine {
+            0% {
+                left: -100%;
+            }
+            20% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        .qrcode-description {
+            text-align: center;
+            color: #333;
+            font-size: 1rem;
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+        
+        .qrcode-icon {
+            font-size: 3rem;
+            color: #07C160;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="fixed w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#about" class="text-2xl font-bold gradient-text">泛华数科</a>
+                </div>
+                
+                <!-- 桌面端导航 -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <div class="menu-trigger relative group">
+                        <button class="flex items-center text-gray-700 hover:text-blue-600 transition">
+                            产品
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        
+                        <!-- 产品下拉菜单 -->
+                        <div class="mega-menu absolute top-full left-0 w-screen max-w-4xl bg-white shadow-lg rounded-xl p-6 grid grid-cols-2 gap-6">
+                            <a href="#aigc" class="flex items-start p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-base font-medium text-gray-900">泛华AIGC</h3>
+                                    <p class="mt-1 text-sm text-gray-500">建筑装饰领域的智能化设计与渲染工具</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#cad" class="flex items-start p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-green-100 text-green-600">
+                                    <i class="fas fa-drafting-compass"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-base font-medium text-gray-900">泛华CAD</h3>
+                                    <p class="mt-1 text-sm text-gray-500">自主内核建筑装饰设计软件</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#bim" class="flex items-start p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-base font-medium text-gray-900">泛华BIM</h3>
+                                    <p class="mt-1 text-sm text-gray-500">建筑信息模型解决方案</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#platform" class="flex items-start p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-orange-100 text-orange-600">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-base font-medium text-gray-900">泛华数智设计平台</h3>
+                                    <p class="mt-1 text-sm text-gray-500">建筑装饰行业数字化工作底座</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition">关于我们</a>
+                    <a href="#partners" class="text-gray-700 hover:text-blue-600 transition">合作伙伴</a>
+                    <a href="#news" class="text-gray-700 hover:text-blue-600 transition">新闻中心</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">联系我们</a>
+                </nav>
+                
+                <!-- 登录/注册按钮 -->
+                <div class="hidden md:flex items-center space-x-4">
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="md:hidden text-gray-700" id="mobile-menu-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div class="mobile-menu fixed top-0 left-0 w-4/5 h-full bg-white shadow-lg z-50 md:hidden" id="mobile-menu">
+            <div class="p-4 border-b">
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-bold gradient-text">泛华数科</span>
+                    <button id="close-menu" class="text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <nav class="p-4 bg-white">
+                <div class="mb-4">
+                    <div class="text-gray-900 font-medium mb-2">产品</div>
+                    <a href="#aigc" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">泛华AIGC</a>
+                    <a href="#cad" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">泛华CAD</a>
+                    <a href="#bim" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">泛华BIM</a>
+                    <a href="#platform" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">泛华数智设计平台</a>
+                </div>
+                <a href="#about" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">关于我们</a>
+                <a href="#partners" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">合作伙伴</a>
+                <a href="#news" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">新闻中心</a>
+                <a href="#contact" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">联系我们</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- 首屏 - 公司介绍 -->
+        <section id="about" class="relative h-screen bg-gradient-to-br from-blue-900 to-black overflow-hidden">
+            <!-- 背景图 -->
+            <div class="absolute inset-0">
+                <img 
+                    src="https://images.unsplash.com/photo-1583230790027-fb1fb888ecee?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=1920" 
+                    alt="建筑与未来科技"
+                    class="w-full h-full object-cover object-center opacity-40"
+                >
+                <!-- 渐变遮罩 -->
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-black/90"></div>
+                
+                <!-- 装饰元素 - 科技感 -->
+                <div class="absolute inset-0 overflow-hidden">
+                    <!-- 网格背景 -->
+                    <div class="absolute inset-0" style="background-image: radial-gradient(rgba(59, 130, 246, 0.3) 2px, transparent 2px); background-size: 50px 50px;"></div>
+                    
+                    <!-- 连接线效果 -->
+                    <div class="absolute top-0 left-0 w-full h-full">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:rgb(37,99,235);stop-opacity:0.2" />
+                                    <stop offset="100%" style="stop-color:rgb(147,197,253);stop-opacity:0.1" />
+                                </linearGradient>
+                            </defs>
+                            <line x1="10%" y1="20%" x2="40%" y2="80%" stroke="url(#grad1)" stroke-width="1" />
+                            <line x1="20%" y1="10%" x2="70%" y2="30%" stroke="url(#grad1)" stroke-width="1" />
+                            <line x1="80%" y1="5%" x2="60%" y2="60%" stroke="url(#grad1)" stroke-width="1" />
+                            <line x1="90%" y1="40%" x2="30%" y2="90%" stroke="url(#grad1)" stroke-width="1" />
+                        </svg>
+                    </div>
+                    
+                    <!-- AI算法可视化元素 -->
+                    <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                        <div class="text-blue-500 text-opacity-20 text-xs font-mono grid grid-cols-8 gap-4">
+                            <div>1010110</div><div>0011001</div><div>1100101</div><div>0110101</div>
+                            <div>0101010</div><div>1010010</div><div>0110110</div><div>1001011</div>
+                            <div>0101011</div><div>1010101</div><div>0110010</div><div>1001101</div>
+                            <div>1001011</div><div>0110110</div><div>1010010</div><div>0101010</div>
+                            <div>0110101</div><div>1100101</div><div>0011001</div><div>1010110</div>
+                            <div>1010110</div><div>0011001</div><div>1100101</div><div>0110101</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 建筑元素轮廓 -->
+                    <div class="absolute bottom-0 left-0 w-full h-1/4 opacity-20">
+                        <svg width="100%" height="100%" viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0,200 L100,180 L200,190 L300,160 L400,190 L500,150 L600,170 L700,130 L800,150 L900,120 L1000,140 L1100,110 L1200,130 L1200,200 L0,200 Z" fill="rgba(59, 130, 246, 0.3)" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container mx-auto px-4 h-full flex items-center relative z-10">
+                <div class="max-w-3xl text-white">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 reveal">
+                        <span class="text-blue-300 inline-block relative">
+                            用系统性数字化能力
+                            <span class="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></span>
+                        </span><br/>
+                        <span class="text-white">重塑建筑业<span class="text-yellow-400">生产范式</span></span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-200 leading-relaxed mb-8 reveal">
+                        泛华数科融合<span class="text-blue-300 font-semibold">AI智能设计</span>、<span class="text-blue-300 font-semibold">自主研发CAD/BIM</span>和<span class="text-blue-300 font-semibold">产业互联网</span>技术，
+                        打造建筑装饰领域一体化数字生态系统，赋能行业新质生产力发展。
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 mb-12 reveal">
+                        <a href="#contact" class="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-blue-900 transition text-center font-bold relative overflow-hidden group">
+                            <span class="relative z-10">联系我们</span>
+                            <span class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                        </a>
+                        <a href="#products-section" class="bg-transparent border-2 border-blue-400 text-blue-300 px-8 py-4 rounded-lg hover:bg-blue-900/20 transition text-center font-bold relative overflow-hidden group">
+                            <span class="relative z-10">探索产品</span>
+                            <span class="absolute bottom-0 left-0 w-0 h-1 bg-blue-300 group-hover:w-full transition-all duration-300"></span>
+                        </a>
+                    </div>
+                    
+                    <!-- 核心数据 -->
+                    <div class="grid grid-cols-3 gap-8 reveal">
+                        <div class="text-center bg-black/30 backdrop-blur-sm p-4 rounded-lg border border-blue-500/20 transform hover:scale-105 transition-transform">
+                            <div class="text-4xl font-bold text-blue-300">20+</div>
+                            <div class="text-gray-300 mt-2">行业经验</div>
+                        </div>
+                        <div class="text-center bg-black/30 backdrop-blur-sm p-4 rounded-lg border border-blue-500/20 transform hover:scale-105 transition-transform">
+                            <div class="text-4xl font-bold text-blue-300">30+</div>
+                            <div class="text-gray-300 mt-2">技术专利</div>
+                        </div>
+                        <div class="text-center bg-black/30 backdrop-blur-sm p-4 rounded-lg border border-blue-500/20 transform hover:scale-105 transition-transform">
+                            <div class="text-4xl font-bold text-blue-300">100+</div>
+                            <div class="text-gray-300 mt-2">企业客户</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 向下滚动提示 -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+                <div class="flex flex-col items-center">
+                    <span class="text-sm mb-2">向下探索</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 产品介绍部分 -->
+        <div id="products-section"></div>
+        
+        <!-- 特色板块部分 -->
+        <div id="features-section"></div>
+        
+        <!-- 新闻和页脚部分 -->
+        <div id="news-footer-section"></div>
+
+        <!-- AIGC产品部分 -->
+        <section id="aigc" class="py-24 bg-white relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-gray-50 to-white"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold">
+                        <span class="gradient-text">泛华AIGC</span>
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600">面向建筑装饰领域的智能化设计与渲染工具</p>
+                </div>
+                
+                <!-- Bento Grid 布局 -->
+                <div class="bento-grid my-12 reveal">
+                    <!-- 主要卡片 -->
+                    <div class="bento-card primary-card bg-blue-50 p-8 relative overflow-hidden">
+                        <div class="number-emphasis text-blue-200">AI</div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4">AI生成设计图，一键解决方案</h3>
+                            <p class="text-gray-600 mb-6 max-w-2xl">
+                                利用我们专业的AI模型激发创新思维。从建筑、室内设计、景观设计、城市规划等领域，丰富的类型和风格中挑选，加入您的创意，塑造独特设计。<span class="font-semibold">30秒内可自动生成多种风格和布局的设计方案</span>。
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fas fa-bolt text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">10秒生成效果图</h4>
+                                        <p class="text-sm text-gray-500">以超高清分辨率生成渲染图</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fas fa-paintbrush text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">定制专属模板</h4>
+                                        <p class="text-sm text-gray-500">通过Lora训练创建专属风格</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-green-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-image text-green-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">多类型渲染</h4>
+                        <p class="text-gray-600">
+                            3D模型空间渲染、AI线稿渲染、毛坯房装修渲染等多类型支持
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-purple-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-wand-magic-sparkles text-purple-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">AI修改图像</h4>
+                        <p class="text-gray-600">
+                            利用修改工具对图像进行精细处理，充分实现您的设计愿景
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 案例展示 -->
+                <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center reveal">
+                    <div class="order-2 lg:order-1 parallax-item">
+                        <h3 class="text-2xl font-bold mb-4">客户成功案例</h3>
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fas fa-building text-blue-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">金座装饰项目</h4>
+                                        <p class="text-sm text-gray-600 mt-1">使用AIGC快速生成50+设计方案，设计周期缩短80%，人力成本降低50%，项目交付速度提升3倍</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fas fa-paint-brush text-green-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">独立设计师工作室</h4>
+                                        <p class="text-sm text-gray-600 mt-1">通过LoRA模型训练功能，定制专属"新中式"风格模板，客户提案通过率提高60%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-1 lg:order-2 parallax-item">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-purple-500/20 rounded-xl transform rotate-3"></div>
+                            <img src="https://images.unsplash.com/photo-1558442074-3c19857bc1dc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" alt="泛华AIGC" class="relative z-10 rounded-xl shadow-lg w-full h-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAD产品部分 -->
+        <section id="cad" class="py-24 bg-gray-50 relative overflow-hidden">
+            <div class="absolute bottom-0 right-0 w-full h-96 bg-gradient-to-t from-white to-gray-50"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold">
+                        <span class="gradient-text">泛华CAD</span>
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600">基于自主内核的建筑装饰设计软件</p>
+                </div>
+                
+                <!-- Bento Grid 布局 -->
+                <div class="bento-grid my-12 reveal">
+                    <!-- 主要卡片 -->
+                    <div class="bento-card primary-card bg-green-50 p-8 relative overflow-hidden">
+                        <div class="number-emphasis text-green-200">CAD</div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4">自主内核，全流程数字化设计</h3>
+                            <p class="text-gray-600 mb-6 max-w-2xl">
+                                泛华CAD是一款基于自主内核、拥有自主知识产权的建筑装饰设计软件，提供从二维绘图到三维建模的全流程数字化设计解决方案。全面融合中国工程标准，打造领先本土设计平台。
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fas fa-shield-alt text-green-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">自主内核技术</h4>
+                                        <p class="text-sm text-gray-500">确保设计数据安全性和一致性</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fas fa-cloud text-green-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">云端协同设计</h4>
+                                        <p class="text-sm text-gray-500">支持多终端实时协作</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-blue-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-file-export text-blue-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">多格式兼容性</h4>
+                        <p class="text-gray-600">
+                            高度兼容DWG、DXF等主流CAD文件格式，支持跨平台数据互通
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-yellow-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot text-yellow-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">AI智能辅助</h4>
+                        <p class="text-gray-600">
+                            内置智能绘图工具，支持自动生成图形、优化设计方案
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 特性展示 -->
+                <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center reveal">
+                    <div class="parallax-item">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-green-500/20 to-blue-500/20 rounded-xl transform -rotate-3"></div>
+                            <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="泛华CAD" class="relative z-10 rounded-xl shadow-lg w-full h-auto">
+                        </div>
+                    </div>
+                    
+                    <div class="parallax-item">
+                        <div class="space-y-8">
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-1 bg-green-500 rounded-full"></div>
+                                    <h4 class="ml-3 font-semibold text-xl">开放API与插件集成</h4>
+                                </div>
+                                <p class="text-gray-600">提供丰富API接口，支持二次开发及第三方插件扩展（如渲染工具、分析模块），满足多样化设计需求。</p>
+                            </div>
+                            
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-1 bg-green-500 rounded-full"></div>
+                                    <h4 class="ml-3 font-semibold text-xl">参数化与约束设计</h4>
+                                </div>
+                                <p class="text-gray-600">支持几何约束（平行、垂直）和尺寸约束，修改参数自动更新关联图形，确保设计一致性。</p>
+                            </div>
+                            
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-1 bg-green-500 rounded-full"></div>
+                                    <h4 class="ml-3 font-semibold text-xl">可定制界面与操作</h4>
+                                </div>
+                                <p class="text-gray-600">提供可配置Ribbon界面、经典/现代布局切换、自定义快捷键及命令行窗口，支持个性化工作流设置。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIM产品部分 -->
+        <section id="bim" class="py-24 bg-white relative overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold">
+                        <span class="gradient-text">泛华BIM</span>
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600">建筑信息模型解决方案</p>
+                </div>
+                
+                <!-- Bento Grid 布局 -->
+                <div class="bento-grid my-12 reveal">
+                    <!-- 主要卡片 -->
+                    <div class="bento-card primary-card bg-purple-50 p-8 relative overflow-hidden">
+                        <div class="number-emphasis text-purple-200">BIM</div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4">建筑全生命周期数字化管理</h3>
+                            <p class="text-gray-600 mb-6 max-w-2xl">
+                                泛华BIM是一款基于泛华CAD自主生态体系构建的建筑信息模型解决方案，深度融合BIM技术与建筑行业需求，为建筑设计、施工、运维全生命周期提供数字化支持。
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i class="fas fa-sitemap text-purple-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">智能轴网系统</h4>
+                                        <p class="text-sm text-gray-500">AI辅助对齐构件，智能布局</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i class="fas fa-cubes text-purple-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">参数化墙体与幕墙</h4>
+                                        <p class="text-sm text-gray-500">智能开洞、碰撞检测功能</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-blue-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-exchange-alt text-blue-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">多格式兼容与数据互通</h4>
+                        <p class="text-gray-600">
+                            支持IFC、Revit等主流格式，打通行业数据壁垒
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-indigo-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-brain text-indigo-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">AI辅助设计与分析</h4>
+                        <p class="text-gray-600">
+                            自动生成布局方案，校验规范并输出审图报告
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 技术特性 -->
+                <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center reveal">
+                    <div class="order-2 lg:order-1 parallax-item">
+                        <h3 class="text-2xl font-bold mb-6">技术优势</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                                    <i class="fas fa-code text-purple-600 text-xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">自主内核技术</h4>
+                                <p class="text-sm text-gray-600">基于自主研发的图形内核，实现BIM数据全流程加密与国产化可控</p>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                                    <i class="fas fa-laptop-code text-purple-600 text-xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">分层墙体构造引擎</h4>
+                                <p class="text-sm text-gray-600">支持多层复合墙体参数化建模，一键生成构造详图与材料用量</p>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                                    <i class="fas fa-book text-purple-600 text-xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">规范知识库集成</h4>
+                                <p class="text-sm text-gray-600">内置2000+条建筑行业强制条文与地方法规，AI自动识别关键指标</p>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                                    <i class="fas fa-cogs text-purple-600 text-xl"></i>
+                                </div>
+                                <h4 class="font-semibold text-lg mb-2">开放数据中间件</h4>
+                                <p class="text-sm text-gray-600">提供IFC/Revit双向无损转换器，解决行业格式互操作性痛点</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-1 lg:order-2 parallax-item">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-blue-500/20 rounded-xl transform rotate-3"></div>
+                            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80" alt="泛华BIM" class="relative z-10 rounded-xl shadow-lg w-full h-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数智设计平台产品部分 -->
+        <section id="platform" class="py-24 bg-gray-50 relative overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold">
+                        <span class="gradient-text">泛华数智设计平台</span>
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600">建筑装饰行业数字化工作底座</p>
+                </div>
+                
+                <!-- Bento Grid 布局 -->
+                <div class="bento-grid my-12 reveal">
+                    <!-- 主要卡片 -->
+                    <div class="bento-card primary-card bg-orange-50 p-8 relative overflow-hidden">
+                        <div class="number-emphasis text-orange-200">平台</div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4">超级弹性协同，打破信息孤岛</h3>
+                            <p class="text-gray-600 mb-6 max-w-2xl">
+                                泛华数智设计平台是为建筑装饰行业打造的一个倡导"超级弹性协同"理念的数字化工作底座，旨在突破传统工具在协作广度与深度上的局限，满足市场中特定且重要的需求。
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                                        <i class="fas fa-sync-alt text-orange-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">CAD文件增量同步技术</h4>
+                                        <p class="text-sm text-gray-500">1GB图纸同步耗时＜30秒</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                                        <i class="fas fa-puzzle-piece text-orange-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">插件市场开放生态</h4>
+                                        <p class="text-sm text-gray-500">支持第三方开发者接入</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-amber-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-project-diagram text-amber-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">项目管理系统</h4>
+                        <p class="text-gray-600">
+                            全流程可视化看板，关联设计文件、进度、材料采购
+                        </p>
+                    </div>
+                    
+                    <!-- 功能卡片 -->
+                    <div class="bento-card secondary-card bg-teal-50 p-6 relative">
+                        <div class="absolute right-4 top-4 w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot text-teal-500 text-xl"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">建筑AI行业规范库</h4>
+                        <p class="text-gray-600">
+                            内置5000+国标/地标规范条文，智能适配不同地区需求
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 平台价值 -->
+                <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center reveal">
+                    <div class="parallax-item">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-red-500/20 rounded-xl transform -rotate-3"></div>
+                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="泛华数智设计平台" class="relative z-10 rounded-xl shadow-lg w-full h-auto">
+                        </div>
+                    </div>
+                    
+                    <div class="parallax-item">
+                        <h3 class="text-2xl font-bold mb-6">平台核心价值</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white rounded-lg p-4 shadow-sm border-l-4 border-orange-500">
+                                <h4 class="font-semibold text-lg">解决问题</h4>
+                                <p class="mt-2 text-gray-600">解决跨团队协作信息断层问题，通过统一平台实时同步设计变更、施工进度与材料清单。</p>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 shadow-sm border-l-4 border-orange-500">
+                                <h4 class="font-semibold text-lg">提升效率</h4>
+                                <p class="mt-2 text-gray-600">图纸协作效率提升50%，方案设计周期压缩70%，材料采购耗时减少3天。</p>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 shadow-sm border-l-4 border-orange-500">
+                                <h4 class="font-semibold text-lg">体验提升</h4>
+                                <p class="mt-2 text-gray-600">设计师"所想即所得"，大型图纸秒级加载，多终端无缝接力工作。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 合作伙伴板块 -->
+        <section id="partners" class="py-20 bg-white relative overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold">
+                        <span class="gradient-text">值得信赖的合作伙伴</span>
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600">全球领先企业信赖我们的数字化解决方案</p>
+                </div>
+                
+                <!-- Bento Grid 合作伙伴展示 -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center reveal">
+                    <!-- 合作伙伴 Logo -->
+                    <div class="grayscale hover:grayscale-0 transition duration-300 opacity-70 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 23 23" class="h-12">
+                            <path fill="#f25022" d="M0 0h10.7v10.7H0z"/>
+                            <path fill="#00a4ef" d="M0 12h10.7v10.7H0z"/>
+                            <path fill="#7fba00" d="M12 0h10.7v10.7H12z"/>
+                            <path fill="#ffb900" d="M12 12h10.7v10.7H12z"/>
+                        </svg>
+                    </div>
+                    <div class="grayscale hover:grayscale-0 transition duration-300 opacity-70 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 272 92" class="h-12">
+                            <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
+                            <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
+                            <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z"/>
+                            <path fill="#34A853" d="M225 3v65h-9.5V3h9.5z"/>
+                            <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z"/>
+                            <path fill="#4285F4" d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z"/>
+                        </svg>
+                    </div>
+                    <div class="grayscale hover:grayscale-0 transition duration-300 opacity-70 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 1024 1024" class="h-12">
+                            <path fill="#12B7F5" d="M322.691 303.656c-13.232 0-26.864 3.984-40.698 7.566-17.616-47.946-69.042-83.148-133.524-83.148-75.794 0-137.106 53.28-137.106 118.35 0 64.658 58.722 107.972 117.444 118.35 0 0 32.926 6.354 28.942 25.018-1.594 7.566-7.57 19.866-7.57 19.866-2.388 7.566-4.776 14.73-4.776 20.682 0 12.76 9.154 19.866 19.308 19.866 3.184 0 17.616-6.35 17.616-6.35s81.08-34.592 113.208-57.494c46.62-32.98 76.392-85.054 76.392-145.38 0-23.138-7.968-37.868-23.504-37.868H322.69zm-108.83 82.336c-15.618 0-28.344-12.76-28.344-28.686 0-15.544 12.724-28.306 28.344-28.306 15.618 0 28.344 12.76 28.344 28.306 0 15.926-12.726 28.686-28.344 28.686zm76.988 0c-15.618 0-28.344-12.76-28.344-28.686 0-15.544 12.726-28.306 28.344-28.306 15.62 0 28.344 12.76 28.344 28.306 0 15.926-12.726 28.686-28.344 28.686z" />
+                            <path fill="#12B7F5" d="M994.49 629.44c0-107.968-110.826-197.244-239.914-197.244-129.088 0-239.912 89.276-239.912 197.244 0 107.974 110.824 197.25 239.912 197.25 27.548 0 53.898-5.33 79.046-13.678 11.33 13.678 67.588 48.27 67.588 48.27s-17.618-33.792-8.86-45.634c55.888-36.66 102.14-101.318 102.14-186.208zM650.752 595.644c-21.094 0-38.708-17.598-38.708-39.08 0-21.47 17.614-39.08 38.708-39.08s38.71 17.61 38.71 39.08c0 21.482-17.616 39.08-38.71 39.08zm197.246 0c-21.094 0-38.708-17.598-38.708-39.08 0-21.47 17.614-39.08 38.708-39.08s38.71 17.61 38.71 39.08c0 21.482-17.614 39.08-38.71 39.08z" />
+                        </svg>
+                    </div>
+                    <div class="grayscale hover:grayscale-0 transition duration-300 opacity-70 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 400 80" class="h-12">
+                            <path fill="#0696D7" d="M397.936 42.2v22.995h-7.997V43.653c0-5.263-1.839-7.42-6.157-7.42-4.797 0-6.997 3.426-6.997 8.153V65.2h-7.998V43.653c0-5.263-1.839-7.42-6.157-7.42-4.797 0-6.997 3.426-6.997 8.153V65.2h-7.998V30.304h7.678v3.976c2.199-3.106 5.757-4.89 10.076-4.89 4.797 0 8.157 1.97 10.076 5.903 2.358-3.793 6.317-5.903 11.194-5.903 7.837 0 11.274 4.726 11.274 12.81zm-61.333 23.022h-7.997V30.33h7.997v34.892zM324.604 19.822c0 2.659-2.118 4.629-5.037 4.629-2.92 0-5.037-1.97-5.037-4.63 0-2.658 2.118-4.628 5.037-4.628 2.919 0 5.037 1.97 5.037 4.629zm-15.673 34.867c0 5.69-2.998 10.581-11.916 10.581-3.837 0-7.837-.747-10.836-2.056l1.578-5.983c2.2 1.223 6.038 2.36 8.998 2.36 4.317 0 5.316-1.545 5.316-3.772 0-6.59-16.312-.734-16.312-12.977 0-5.953 4.557-10.408 13.074-10.408 3.599 0 7.038.587 9.716 1.847l-1.498 5.822c-2.759-1.223-5.518-1.783-8.038-1.783-3.597 0-4.997 1.094-4.997 3.346 0 5.977 15.913.666 15.913 12.864v.16zm-32.069-24.372v8.692h7.758v6.025h-7.758v13.11c0 2.757 1.563 3.504 3.598 3.504 1.399 0 3.038-.253 4.158-.747l1.24 5.902c-1.899.734-4.398 1.32-7.677 1.32-6.077 0-9.316-3.186-9.316-9.73V45.035h-4.637v-6.025h4.637v-6.83l7.997-1.863zm-35.507 24.372c0 5.69-2.999 10.581-11.916 10.581-3.837 0-7.837-.747-10.836-2.056l1.578-5.983c2.198 1.223 6.037 2.36 8.997 2.36 4.317 0 5.317-1.545 5.317-3.772 0-6.59-16.312-.734-16.312-12.977 0-5.953 4.557-10.408 13.074-10.408 3.597 0 7.037.587 9.715 1.847l-1.497 5.822c-2.76-1.223-5.518-1.783-8.038-1.783-3.598 0-4.997 1.094-4.997 3.346 0 5.977 15.914.666 15.914 12.864v.16h.001zM209.299 65.195h-7.997V43.65c0-5.262-2.518-7.417-6.837-7.417-4.996 0-7.998 3.425-7.998 8.151v20.81h-7.997V30.304h7.678v3.976c2.679-3.426 6.438-4.89 10.836-4.89 8.357 0 12.314 5.424 12.314 13.267v22.538h.001zm-35.443-18.048c0 11.487-7.358 18.94-18.793 18.94-11.595 0-18.951-7.453-18.951-18.94 0-11.493 7.486-18.937 18.951-18.937 11.305 0 18.793 7.444 18.793 18.937zm-8.277 0c0-6.77-3.838-10.935-10.516-10.935-6.837 0-10.675 4.165-10.675 10.935 0 6.777 3.838 10.935 10.675 10.935 6.678 0 10.516-4.158 10.516-10.935zm-52.298 18.048h-9.125l-10.226-34.918h8.786l5.367 23.012 5.646-23.012h10.924l5.578 22.945 5.566-22.945h8.557l-10.285 34.918h-9.186l-5.646-21.626-5.956 21.626zm-30.326-18.048c0 11.487-7.358 18.94-18.793 18.94-11.595 0-18.952-7.453-18.952-18.94 0-11.493 7.487-18.937 18.952-18.937 11.304 0 18.793 7.444 18.793 18.937zm-8.277 0c0-6.77-3.839-10.935-10.516-10.935-6.837 0-10.675 4.165-10.675 10.935 0 6.777 3.838 10.935 10.675 10.935 6.677 0 10.516-4.158 10.516-10.935zm-52.82 18.048h-7.998V43.486c0-5.097-2.518-7.252-6.358-7.252-3.998 0-7.188 2.587-7.188 7.845V65.2h-8V30.304h7.708v3.936c2.2-3.07 5.837-4.845 10.154-4.845 7.877 0 11.674 5.097 11.674 12.516v23.283h.009zM-.5 0h80v80h-80V0z" />
+                        </svg>
+                    </div>
+                    <div class="grayscale hover:grayscale-0 transition duration-300 opacity-70 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 1000 1000" class="h-12">
+                            <path fill="#FF6A00" d="M818.545 146.286H174.545c-6.982 0-12.655 5.673-12.655 12.655v686.982c0 6.982 5.673 12.655 12.655 12.655h644c6.982 0 12.655-5.673 12.655-12.655V158.941c0-6.982-5.673-12.655-12.655-12.655zM296.218 767.65H224.4v-85.891H181.527v-64.582H224.4v-82.237h71.818v82.237h79.345v64.582h-79.345v85.891zm219.782 0h-71.818v-85.891h-64.582v-64.582h64.582v-82.237h71.818v82.237h71.818v64.582h-71.818v85.891zm204.8 0h-71.818v-85.891H591.2v-64.582h58.782v-82.237h71.818v82.237h76.437v64.582h-76.437v85.891zM759.764 387.77L607.891 233.177h-226.91l-154.037 154.618-90.037-88.891 245.147-245.145h325.236L953.673 297.39l-193.91 90.38z"/>
+                        </svg>
+                    </div>
+                    <div class="grayscale hover:grayscale-0 transition duration-300 opacity-70 hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 1600 876.61" class="h-12">
+                            <path fill="#76B900" d="M116.34 124.84h33.28c68.07 0 115.44 40.56 115.44 119.2v.59c0 78.65-47.37 119.8-115.44 119.8h-33.28V124.84Zm33.58 205.4c49.75 0 81.54-29.41 81.54-85.32v-.59c0-55.31-31.79-85.31-81.54-85.31h-1.48v171.22h1.48Z"/>
+                            <path fill="#76B900" d="M285.77 124.84h130.4v32.33H317.86V228h86.83v32.32h-86.83v71.79h98.81v32.32H285.77V124.84ZM440.58 124.84h32.09v239.59h-32.09zM503.37 124.84h130.39v32.33H535.46V228h86.83v32.32h-86.83v71.79h98.81v32.32H503.37V124.84ZM654.83 244.34v-.59c0-70.12 52.67-123.09 125.38-123.09 36.79 0 66.2 10.15 89.5 29.26L850.33 178c-19.06-15.45-40.26-24.25-70.42-24.25-50.93 0-91.27 40.56-91.27 89.41v.59c0 51.59 39.08 90.01 94.39 90.01 23.16 0 46.19-7.11 63.07-19.95v-48.85h-67.17v-31.14h98.22v95.33c-24.22 21.35-59.52 35.9-95.48 35.9-76.47 0-127.3-53.87-127.3-120.71M959.74 124.25h29.56l102.52 240.18H1059l-26.37-63.36h-121.9l-26.66 63.36h-30.15l105.82-240.18Zm63.95 145.29-47.44-113.07-47.73 113.07h95.17ZM1116.06 124.84h32.09v207.57h94.39v32.02h-126.48V124.84ZM1324.77 124.25h29.56l102.52 240.18h-32.97l-26.37-63.36h-121.9l-26.66 63.36h-30.15l105.97-240.18Zm63.95 145.29-47.44-113.07-47.73 113.07h95.17ZM1481.09 124.84h32.09v239.59h-32.09zM116.03 497.21h109.85c31.2 0 55.61 9.26 71.65 26.07 13.81 14.11 21.39 33.78 21.39 57.39v.59c0 47.22-31.49 75.19-75.95 82.3l85.8 103.78H288.1l-79.05-97.55h-61.93v97.55h-31.99V497.21h.9Zm107.61 141.73c41.94 0 68.54-21.95 68.54-56.21v-.59c0-35.55-25.4-55.02-69.14-55.02h-74.92v111.82h75.52ZM345.82 497.21h34.61l144.8 192.61V497.21h31.49v270.13h-31.19l-148.51-197.03v197.03h-31.49V497.21h.29ZM567.27 632.57v-.59c0-76.96 58.72-139.11 141.09-139.11 82.67 0 140.8 61.56 140.8 138.52v.59c0 76.96-58.72 139.1-141.09 139.1-82.67 0-140.8-61.56-140.8-138.51Zm246.6 0v-.59c0-59.53-43.42-107.34-105.81-107.34-62.09 0-105.51 47.22-105.51 106.75v.59c0 59.54 43.42 107.04 105.81 107.04 62.09 0 105.51-47.21 105.51-106.45Z" />
+                            <path fill="#76B900" d="M870.37 497.21h30.89l67.94 190.83 60.36-191.12h25.4l60.36 191.12 67.94-190.83h30.3l-88.14 270.72h-25.7l-60.36-184.3-60.06 184.3h-25.7l-83.23-270.72Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新闻中心 -->
+        <section id="news" class="py-20 bg-gray-50 relative overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold">
+                        <span class="gradient-text">新闻中心</span>
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600">了解泛华数科最新动态</p>
+                </div>
+                
+                <!-- 新闻轮播 -->
+                <div class="relative overflow-hidden reveal" id="news-carousel">
+                    <div class="flex transition-transform duration-500 ease-in-out" id="news-slides">
+                        <!-- 新闻卡片 1 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-4">
+                            <a href="news-detail.html?id=1" target="_blank" class="block group">
+                                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                                    <div class="relative aspect-video overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="泛华数科参与中国建筑产业数字化转型高峰论坛" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                    </div>
+                                    <div class="p-6">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-sm text-blue-600 font-medium">公司新闻</span>
+                                            <span class="text-gray-400 mx-2">•</span>
+                                            <span class="text-sm text-gray-500">2023-10-15</span>
+                                        </div>
+                                        <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition">泛华数科参与中国建筑产业数字化转型高峰论坛</h3>
+                                        <p class="text-gray-600 line-clamp-2">
+                                            泛华数科作为建筑装饰领域数字化创新的领军企业，受邀参加2023中国建筑产业数字化转型高峰论坛，分享"AI+设计"最新实践成果...
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- 新闻卡片 2 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-4">
+                            <a href="news-detail.html?id=2" target="_blank" class="block group">
+                                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                                    <div class="relative aspect-video overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="泛华AIGC 2.0版本重磅发布" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                    </div>
+                                    <div class="p-6">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-sm text-green-600 font-medium">产品更新</span>
+                                            <span class="text-gray-400 mx-2">•</span>
+                                            <span class="text-sm text-gray-500">2023-09-28</span>
+                                        </div>
+                                        <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition">泛华AIGC 2.0版本重磅发布，设计效率再提升</h3>
+                                        <p class="text-gray-600 line-clamp-2">
+                                            泛华数科发布AIGC产品2.0版本，新增LoRA模型训练功能，支持批量渲染，效果图生成速度提升50%，多风格模板库扩充至1000+...
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- 新闻卡片 3 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-4">
+                            <a href="news-detail.html?id=3" target="_blank" class="block group">
+                                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                                    <div class="relative aspect-video overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="泛华数科与清华大学建筑学院达成战略合作" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                    </div>
+                                    <div class="p-6">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-sm text-purple-600 font-medium">战略合作</span>
+                                            <span class="text-gray-400 mx-2">•</span>
+                                            <span class="text-sm text-gray-500">2023-08-16</span>
+                                        </div>
+                                        <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition">泛华数科与清华大学建筑学院达成战略合作</h3>
+                                        <p class="text-gray-600 line-clamp-2">
+                                            泛华数科与清华大学建筑学院签署战略合作协议，双方将在建筑AI技术研发、人才培养、行业标准制定等方面展开深度合作...
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- 新闻卡片 4 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-4">
+                            <a href="news-detail.html?id=4" target="_blank" class="block group">
+                                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                                    <div class="relative aspect-video overflow-hidden">
+                                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="泛华数科完成新一轮融资" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                    </div>
+                                    <div class="p-6">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-sm text-orange-600 font-medium">企业发展</span>
+                                            <span class="text-gray-400 mx-2">•</span>
+                                            <span class="text-sm text-gray-500">2023-07-20</span>
+                                        </div>
+                                        <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition">泛华数科完成新一轮融资，估值超10亿元</h3>
+                                        <p class="text-gray-600 line-clamp-2">
+                                            泛华数科宣布完成新一轮融资，由国内知名风投机构领投，资金将用于产品研发、人才引进及市场拓展，加快建筑设计领域AI创新应用...
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 轮播控制按钮 -->
+                    <button id="prev-slide" class="absolute top-1/2 left-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center text-gray-700 hover:text-blue-600 transition focus:outline-none">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="next-slide" class="absolute top-1/2 right-2 transform -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center text-gray-700 hover:text-blue-600 transition focus:outline-none">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    
+                    <!-- 轮播指示器 -->
+                    <div class="flex justify-center mt-8">
+                        <div class="flex space-x-2">
+                            <button class="w-2.5 h-2.5 rounded-full bg-blue-600 indicator" data-index="0"></button>
+                            <button class="w-2.5 h-2.5 rounded-full bg-gray-300 indicator" data-index="1"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我们 -->
+        <section id="contact" class="py-20 bg-white relative overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="reveal">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                            <span class="gradient-text">联系我们</span>
+                        </h2>
+                        <p class="text-lg text-gray-600 mb-6">
+                            无论您是有疑问、合作意向，还是想了解更多关于我们的产品和服务，都可以随时与我们取得联系。我们的团队将竭诚为您服务。
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 mt-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">总部地址</h3>
+                                    <p class="mt-1 text-gray-600">北京市丰台总部基地12区42号楼6层</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 mt-1">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">联系电话</h3>
+                                    <p class="mt-1 text-gray-600">010-63703680</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 mt-1">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">电子邮箱</h3>
+                                    <p class="mt-1 text-gray-600">market@fanhuadt.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reveal">
+                        <form class="bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6">发送消息</h3>
+                            <div class="mb-4">
+                                <label for="name" class="block text-gray-700 mb-2">姓名</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition">
+                            </div>
+                            <div class="mb-4">
+                                <label for="phone" class="block text-gray-700 mb-2">手机号</label>
+                                <input type="phone" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition">
+                            </div>
+                            <div class="mb-4">
+                                <label for="subject" class="block text-gray-700 mb-2">主题</label>
+                                <input type="text" id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition">
+                            </div>
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 mb-2">消息内容</label>
+                                <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+                                发送消息
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-900 text-white pt-16 pb-8">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                    <!-- 公司信息 -->
+                    <div class="lg:col-span-2">
+                        <div class="text-2xl font-bold mb-4 gradient-text">泛华数科</div>
+                        <p class="text-gray-400 mb-6">
+                            泛华数科是泛华集团旗下专注于建筑装饰设计领域数字化创新的科技子公司，致力于打造全球领先的一站式建筑装饰设计SaaS平台。
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="javascript:void(0)" id="wechat-qr-trigger" class="relative group text-gray-400 hover:text-green-400 transition cursor-pointer">
+                                <i class="fab fa-weixin text-xl"></i>
+                                <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                                    关注公众号
+                                </span>
+                                <!-- 鼠标悬停动画效果 -->
+                                <span class="absolute -inset-2 bg-white rounded-full opacity-0 group-hover:opacity-10 transform scale-0 group-hover:scale-100 transition-all duration-300"></span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 产品 -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">产品</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#aigc" class="text-gray-400 hover:text-white transition">泛华AIGC</a></li>
+                            <li><a href="#cad" class="text-gray-400 hover:text-white transition">泛华CAD</a></li>
+                            <li><a href="#bim" class="text-gray-400 hover:text-white transition">泛华BIM</a></li>
+                            <li><a href="#platform" class="text-gray-400 hover:text-white transition">泛华数智设计平台</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 公司 -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">公司</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#about" class="text-gray-400 hover:text-white transition">关于我们</a></li>
+                            <li><a href="#partners" class="text-gray-400 hover:text-white transition">合作伙伴</a></li>
+                            <li><a href="#news" class="text-gray-400 hover:text-white transition">新闻中心</a></li>
+                            <li><a href="#contact" class="text-gray-400 hover:text-white transition">联系我们</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-gray-500 mb-4 md:mb-0">
+                        &copy; 2023 泛华数科科技有限公司 版权所有 
+                        <a href="#" class="hover:text-gray-400 transition">京ICP备12345678号-1</a>
+                    </div>
+                    <div class="flex space-x-6">
+                        <a href="user-agreement.html" target="_blank" class="text-gray-500 hover:text-gray-400 transition">用户协议</a>
+                        <a href="privacy-policy.html" target="_blank" class="text-gray-500 hover:text-gray-400 transition">隐私政策</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // 等待DOM加载完成后再执行所有初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 移动端菜单控制
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMenu = document.getElementById('close-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            // 检查元素是否存在
+            if (mobileMenuButton && closeMenu && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.add('open');
+                });
+                
+                closeMenu.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                });
+            } else {
+                console.warn('Mobile menu elements not found, skipping initialization');
+            }
+            
+            // 微信二维码弹窗控制
+            const qrcodeModal = document.getElementById('qrcode-modal');
+            const qrcodeTrigger = document.getElementById('wechat-qr-trigger');
+            const qrcodeClose = document.getElementById('qrcode-close');
+            
+            // 检查元素是否存在
+            if (qrcodeModal && qrcodeTrigger && qrcodeClose) {
+                qrcodeTrigger.addEventListener('click', () => {
+                    qrcodeModal.classList.add('active');
+                    // 禁止背景滚动
+                    document.body.style.overflow = 'hidden';
+                    
+                    // 添加进入动画 - Apple风格渐入
+                    const qrcodeImg = document.getElementById('qrcode-img');
+                    const qrcodeContainer = document.querySelector('.qrcode-container');
+                    const decorElements = document.querySelectorAll('.qrcode-body > div, .qrcode-body > p, .qrcode-icon');
+                    
+                    // 重置状态
+                    if (qrcodeImg) {
+                        qrcodeImg.style.opacity = '0';
+                        qrcodeImg.style.transform = 'scale(0.8)';
+                    }
+                    
+                    // 元素依次渐入
+                    if (decorElements.length > 0) {
+                        decorElements.forEach((elem, index) => {
+                            elem.style.opacity = '0';
+                            elem.style.transform = 'translateY(20px)';
+                            elem.style.transition = 'none';
+                        });
+                    }
+                    
+                    // 容器进入动画
+                    setTimeout(() => {
+                        if (qrcodeContainer) {
+                            qrcodeContainer.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                            qrcodeContainer.style.transform = 'scale(1) translateY(0)';
+                        }
+                        
+                        // 图片动画
+                        setTimeout(() => {
+                            if (qrcodeImg) {
+                                qrcodeImg.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                                qrcodeImg.style.opacity = '1';
+                                qrcodeImg.style.transform = 'scale(1)';
+                            }
+                            
+                            // 元素依次渐入
+                            if (decorElements.length > 0) {
+                                decorElements.forEach((elem, index) => {
+                                    setTimeout(() => {
+                                        elem.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                                        elem.style.opacity = '1';
+                                        elem.style.transform = 'translateY(0)';
+                                    }, 100 + index * 80);
+                                });
+                            }
+                        }, 200);
+                    }, 50);
+                });
+                
+                qrcodeClose.addEventListener('click', () => {
+                    qrcodeModal.classList.remove('active');
+                    // 恢复背景滚动
+                    document.body.style.overflow = '';
+                });
+                
+                // 点击弹窗外部关闭
+                qrcodeModal.addEventListener('click', (e) => {
+                    if (e.target === qrcodeModal) {
+                        qrcodeModal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            } else {
+                console.warn('QR code modal elements not found, skipping initialization');
+            }
+            
+            // 滚动动效
+            function revealOnScroll() {
+                const reveals = document.querySelectorAll('.reveal');
+                
+                if (reveals.length > 0) {
+                    reveals.forEach(reveal => {
+                        const revealTop = reveal.getBoundingClientRect().top;
+                        const windowHeight = window.innerHeight;
+                        const revealPoint = 150;
+                        
+                        if(revealTop < windowHeight - revealPoint) {
+                            reveal.classList.add('active');
+                        }
+                    });
+                }
+                
+                // 视差滚动效果
+                const parallaxItems = document.querySelectorAll('.parallax-item');
+                if (parallaxItems.length > 0) {
+                    parallaxItems.forEach(item => {
+                        const itemTop = item.getBoundingClientRect().top;
+                        const windowHeight = window.innerHeight;
+                        
+                        if(itemTop < windowHeight * 0.8) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            }
+            
+            // 平滑滚动到锚点
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    // 关闭移动端菜单
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove('open');
+                    }
+                    
+                    // 滚动到目标位置
+                    const targetElement = document.querySelector(this.getAttribute('href'));
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        console.warn('Target element not found:', this.getAttribute('href'));
+                    }
+                });
+            });
+            
+            // 新闻轮播控制
+            const slides = document.getElementById('news-slides');
+            const prevBtn = document.getElementById('prev-slide');
+            const nextBtn = document.getElementById('next-slide');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            // 如果元素不存在，则跳过轮播初始化
+            if (slides && prevBtn && nextBtn && indicators.length > 0) {
+                let currentSlide = 0;
+                const slideCount = 2; // 总共有2个轮播页面
+                
+                function updateSlidePosition() {
+                    // 针对不同屏幕尺寸调整轮播逻辑
+                    if (window.innerWidth >= 768) {
+                        // 桌面端一次显示3个卡片
+                        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+                    } else {
+                        // 移动端一次显示1个卡片
+                        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+                    }
+                    
+                    // 更新指示器状态
+                    indicators.forEach((indicator, index) => {
+                        if (index === currentSlide) {
+                            indicator.classList.remove('bg-gray-300');
+                            indicator.classList.add('bg-blue-600');
+                        } else {
+                            indicator.classList.remove('bg-blue-600');
+                            indicator.classList.add('bg-gray-300');
+                        }
+                    });
+                }
+                
+                // 上一张
+                prevBtn.addEventListener('click', function() {
+                    currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+                    updateSlidePosition();
+                });
+                
+                // 下一张
+                nextBtn.addEventListener('click', function() {
+                    currentSlide = (currentSlide + 1) % slideCount;
+                    updateSlidePosition();
+                });
+                
+                // 点击指示器跳转
+                indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', function() {
+                        currentSlide = index;
+                        updateSlidePosition();
+                    });
+                });
+                
+                // 自动轮播
+                setInterval(function() {
+                    currentSlide = (currentSlide + 1) % slideCount;
+                    updateSlidePosition();
+                }, 5000);
+                
+                // 初始化轮播
+                updateSlidePosition();
+                
+                // 窗口大小变化时更新
+                window.addEventListener('resize', updateSlidePosition);
+            } else {
+                console.warn('News carousel elements not found, skipping initialization');
+            }
+            
+            // 初始化滚动动效
+            revealOnScroll();
+            // 监听滚动事件
+            window.addEventListener('scroll', revealOnScroll);
+
+            // 页面加载完成后，显示内容
+            document.body.style.visibility = 'visible';
+        });
+        
+        // 在DOMContentLoaded之前隐藏页面内容，防止未初始化的JavaScript导致闪烁或错乱
+        document.body.style.visibility = 'hidden';
+    </script>
+
+    <!-- 微信二维码弹窗 -->
+    <div id="qrcode-modal" class="qrcode-modal">
+        <div class="qrcode-container">
+            <div class="qrcode-header">
+                <h3 class="qrcode-title">微信公众号</h3>
+                <div class="qrcode-close" id="qrcode-close">
+                    <i class="fas fa-times"></i>
+                </div>
+                <!-- 装饰元素 -->
+                <div class="absolute w-20 h-20 rounded-full bg-blue-200 opacity-20 -top-10 -left-10"></div>
+                <div class="absolute w-16 h-16 rounded-full bg-blue-300 opacity-10 top-10 -right-8"></div>
+            </div>
+            <div class="qrcode-body">
+                <div class="qrcode-icon">
+                    <i class="fab fa-weixin"></i>
+                </div>
+                <div class="relative">
+                    <div class="qrcode-image">
+                        <img src="images/数科公众号二维码.jpg" alt="泛华数科微信公众号" id="qrcode-img">
+                    </div>
+                    <!-- 超大装饰数字 -->
+                    <div class="absolute -right-16 -top-8 text-7xl font-black text-blue-100 opacity-30 transform -rotate-12 select-none">
+                        01
+                    </div>
+                    <!-- 勾线图形元素 -->
+                    <svg class="absolute -left-8 -bottom-4 w-12 h-12 text-blue-200 opacity-40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="2" fill="none" />
+                        <path d="M30,50 L45,65 L70,35" stroke="currentColor" stroke-width="2" fill="none" />
+                    </svg>
+                </div>
+                <p class="qrcode-description">扫码关注<strong>泛华数科</strong>微信公众号<br>获取最新产品资讯和行业洞见</p>
+                <!-- 底部装饰线 -->
+                <div class="mt-4 w-40 h-1 bg-gradient-to-r from-blue-200 to-transparent rounded-full"></div>
+                
+                <!-- 标签 -->
+                <div class="flex mt-5 gap-2 flex-wrap justify-center">
+                    <span class="px-3 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">数字化资讯</span>
+                    <span class="px-3 py-1 bg-green-50 text-green-600 text-xs rounded-full">行业趋势</span>
+                    <span class="px-3 py-1 bg-purple-50 text-purple-600 text-xs rounded-full">产品更新</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

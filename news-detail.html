@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻详情 - 泛华数科</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+        
+        :root {
+            --primary-color: #3B82F6;
+            --secondary-color: #10B981;
+            --accent-color: #8B5CF6;
+            --background-color: #F9FAFB;
+            --text-color: #1F2937;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            overflow-x: hidden;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="fixed w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold gradient-text">泛华数科</a>
+                </div>
+                
+                <!-- 返回按钮 -->
+                <a href="index.html#news" class="flex items-center text-gray-700 hover:text-blue-600 transition">
+                    <i class="fas fa-arrow-left mr-2"></i> 返回首页
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 新闻详情 -->
+    <main class="pt-28 pb-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- 新闻标题 -->
+                <div class="mb-8">
+                    <div class="flex items-center mb-4">
+                        <span id="news-category" class="text-sm font-medium bg-blue-100 text-blue-800 rounded-full px-3 py-1">公司新闻</span>
+                        <span class="text-gray-400 mx-3">|</span>
+                        <span id="news-date" class="text-sm text-gray-500">2023-10-15</span>
+                    </div>
+                    <h1 id="news-title" class="text-3xl md:text-4xl font-bold">泛华数科参与中国建筑产业数字化转型高峰论坛</h1>
+                </div>
+                
+                <!-- 新闻封面图 -->
+                <div class="mb-8">
+                    <img id="news-image" src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="新闻封面图" class="w-full h-auto rounded-xl shadow-md">
+                </div>
+                
+                <!-- 新闻内容 -->
+                <div id="news-content" class="prose prose-lg max-w-none">
+                    <p>泛华数科作为建筑装饰领域数字化创新的领军企业，受邀参加2023中国建筑产业数字化转型高峰论坛，分享"AI+设计"最新实践成果。</p>
+                    
+                    <p>论坛上，泛华数科CTO王明博士发表了题为《AI驱动建筑设计：挑战与机遇》的主题演讲，深入分析了当前建筑设计行业面临的数字化转型挑战，并展示了泛华数科在AI辅助设计方面的创新成果。</p>
+                    
+                    <p>王明博士表示："建筑设计行业正迎来前所未有的数字化浪潮，AI技术不仅能提升设计效率，还能激发设计师的创造力。泛华数科致力于打造智能化设计工具，赋能建筑设计师，推动行业数字化转型。"</p>
+                    
+                    <p>演讲中，王明博士演示了泛华AIGC最新的功能，包括根据文本描述生成建筑概念设计、3D模型实时渲染、智能施工图生成等，引起了与会者的广泛关注。</p>
+                    
+                    <p>作为行业领先的数字化解决方案提供商，泛华数科近年来不断加大AI技术研发投入，自主研发的泛华AIGC、泛华CAD、泛华BIM等产品已在多家大型建筑设计院和房地产企业成功应用，显著提升了设计效率和质量。</p>
+                    
+                    <p>论坛期间，泛华数科还与多家国内外知名企业签署了战略合作协议，共同推动建筑产业数字化升级，为中国建筑产业的高质量发展注入新动力。</p>
+                    
+                    <p>据悉，本次论坛由中国建筑学会主办，吸引了来自全国各地近千名建筑设计、施工、材料供应等领域的专业人士参与，共同探讨建筑产业数字化转型的最新趋势和实践经验。</p>
+                </div>
+                
+                <!-- 分享与返回 -->
+                <div class="mt-12 flex flex-col sm:flex-row justify-between items-center">
+                    <div class="flex space-x-4 mb-4 sm:mb-0">
+                        <span class="text-gray-700">分享到：</span>
+                        <a href="#" class="text-gray-600 hover:text-blue-600 transition">
+                            <i class="fab fa-weixin"></i>
+                        </a>
+                    </div>
+                    <a href="index.html#news" class="text-blue-600 hover:text-blue-700 transition">
+                        <i class="fas fa-arrow-left mr-1"></i> 返回新闻列表
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚简化版 -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-2xl font-bold gradient-text">泛华数科</span>
+                </div>
+                <div class="text-gray-500">
+                    &copy; 2023 泛华数科科技有限公司 版权所有
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 获取URL参数
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // 新闻数据
+        const newsData = [
+            {
+                id: 1,
+                title: "泛华数科参与中国建筑产业数字化转型高峰论坛",
+                category: "公司新闻",
+                date: "2023-10-15",
+                image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+            },
+            {
+                id: 2,
+                title: "泛华AIGC 2.0版本重磅发布，设计效率再提升",
+                category: "产品更新",
+                date: "2023-09-28",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+            },
+            {
+                id: 3,
+                title: "泛华数科与清华大学建筑学院达成战略合作",
+                category: "战略合作",
+                date: "2023-08-16",
+                image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+            },
+            {
+                id: 4,
+                title: "泛华数科完成新一轮融资，估值超10亿元",
+                category: "企业发展",
+                date: "2023-07-20",
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+            }
+        ];
+        
+        // 加载新闻内容
+        document.addEventListener('DOMContentLoaded', function() {
+            const newsId = getUrlParam('id');
+            if (newsId) {
+                const news = newsData.find(item => item.id == newsId);
+                if (news) {
+                    document.title = `${news.title} - 泛华数科`;
+                    document.getElementById('news-title').textContent = news.title;
+                    document.getElementById('news-category').textContent = news.category;
+                    document.getElementById('news-date').textContent = news.date;
+                    document.getElementById('news-image').src = news.image;
+                    document.getElementById('news-image').alt = news.title;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
