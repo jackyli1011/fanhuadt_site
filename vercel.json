@@ -7,12 +7,6 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
   "regions": ["hkg1"],
   "headers": [
     {
@@ -24,5 +18,10 @@
         }
       ]
     }
-  ]
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 } 
